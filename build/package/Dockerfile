@@ -14,10 +14,6 @@ RUN go build -o /app/main ./cmd/lite/lite.go
 # Final stage
 FROM --platform=arm64 alpine:3.14
 
-# Consider adding a non-root user for running the application
-# RUN adduser -D myuser
-# USER myuser
-
 WORKDIR /app
 
 COPY --from=builder /app/main /app/main
