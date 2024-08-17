@@ -9,11 +9,17 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/fivemanage/lite/internal/auth"
 	"github.com/fivemanage/lite/internal/http"
+	authservice "github.com/fivemanage/lite/internal/service/authservice"
 )
 
 func main() {
-	server := http.NewServer()
+	githubConfig := auth.NewGithubConfig()
+
+	authService := authservice.NewWithConfig(githubConfig)
+
+	server := http.NewServer(authService)
 
 	srv := &nethttp.Server{
 		Addr:    ":8080",

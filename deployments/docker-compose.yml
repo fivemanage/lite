@@ -2,21 +2,12 @@ version: "3.8"
 name: "Fivemanage Lite"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3.13-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: "admin"
-      RABBITMQ_DEFAULT_PASS: "admin"
   database:
-    image: mysql
+    image: mysql:8
     container_name: database
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: fivemanage-dev
+      MYSQL_DATABASE: fivemanage-lite-dev
     ports:
       - "3306:3306"
     volumes:
