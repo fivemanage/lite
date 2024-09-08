@@ -1,0 +1,4 @@
+package compression
+
+func EncodeImage() {
+}

@@ -16,23 +16,16 @@ type Server struct {
 	Engine *echo.Echo
 }
 
-type GithubEmail struct {
-	Email      string `json:"email"`
-	Primary    bool   `json:"primary"`
-	Verified   bool   `json:"verified"`
-	Visibility string `json:"visibility"` // "public" or "private"
-}
-
 func NewServer(authService *authservice.Auth) *Server {
-	server := echo.New()
-	// server.Use(middleware.Logger())
-	server.Use(middleware.Recover())
-
+	engine := echo.New()
 	srv := &Server{
-		Engine: server,
+		Engine: engine,
 	}
 
-	server.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+	srv.Engine.Use(middleware.Logger())
+	srv.Engine.Use(middleware.Recover())
+
+	srv.Engine.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Root:       "web/dist",
 		Filesystem: nethttp.FS(webContent),
 		HTML5:      true,
@@ -41,22 +34,10 @@ func NewServer(authService *authservice.Auth) *Server {
 		},
 	}))
 
-	apiGroup := server.Group("/api")
-	apiGroup.GET("/auth/login", func(c echo.Context) error {
-		url := authService.Login()
+	apiGroup := srv.Engine.Group("/api")
 
-		return c.Redirect(302, url)
-	})
-
-	apiGroup.GET("/auth/callback/github", func(c echo.Context) error {
-		code := c.QueryParam("code")
-
-		accessToken := authService.Callback(code)
-
-		return c.JSON(200, echo.Map{
-			"token": accessToken,
-		})
-	})
+	srv.authRouterGroup(apiGroup, authService)
+	srv.imageRouterGroup(apiGroup)
 
 	return srv
 }

@@ -1,10 +1,9 @@
-version: "3.8"
 name: "Fivemanage Lite"
 
 services:
   database:
     image: mysql:8
-    container_name: database
+    container_name: lite_database
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: fivemanage-lite-dev

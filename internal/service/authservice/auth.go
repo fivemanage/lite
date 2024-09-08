@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/fivemanage/lite/internal/auth"
+	"github.com/uptrace/bun"
 	"golang.org/x/oauth2"
 )
 
@@ -13,30 +15,32 @@ type authConfig struct {
 
 type Auth struct {
 	config authConfig
+	db     *bun.DB
 }
 
-func NewWithConfig(gitubConfig *oauth2.Config) *Auth {
+func New(db *bun.DB) *Auth {
+	githubConfig := auth.NewGithubConfig()
+
 	return &Auth{
 		config: authConfig{
-			github: gitubConfig,
+			github: githubConfig,
 		},
+		db: db,
 	}
 }
 
-func (r *Auth) Login() string {
+func (a *Auth) Login() string {
 	verifier := oauth2.GenerateVerifier()
-	url := r.config.github.AuthCodeURL("state", oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier))
+	url := a.config.github.AuthCodeURL("state", oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier))
 
 	return url
 }
 
-func (r *Auth) Callback(code string) string {
-	token, err := r.config.github.Exchange(context.TODO(), code)
+func (a *Auth) Callback(code string) *oauth2.Token {
+	token, err := a.config.github.Exchange(context.TODO(), code)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(token.AccessToken)
-
-	return token.AccessToken
+	return token
 }

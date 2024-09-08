@@ -9,15 +9,23 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fivemanage/lite/internal/auth"
+	"github.com/fivemanage/lite/internal/database"
 	"github.com/fivemanage/lite/internal/http"
-	authservice "github.com/fivemanage/lite/internal/service/authservice"
+	"github.com/fivemanage/lite/internal/service/authservice"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	githubConfig := auth.NewGithubConfig()
+	err := godotenv.Load()
+	// TODO: Only for development
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	authService := authservice.NewWithConfig(githubConfig)
+	db := database.New("sqlite", "")
+	store := db.Connect()
+
+	authService := authservice.New(store)
 
 	server := http.NewServer(authService)
 
@@ -32,7 +40,7 @@ func main() {
 		}
 	}()
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Println("Shutdown Server ...")
