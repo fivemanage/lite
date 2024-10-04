@@ -19,7 +19,7 @@ func main() {
 	err := godotenv.Load()
 	// TODO: Only for development
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file.")
 	}
 
 	db := database.New("sqlite", "")

@@ -11,7 +11,7 @@ import (
 type SQLite struct{}
 
 func (r *SQLite) Connect() *bun.DB {
-	sqldb, err := sql.Open(sqliteshim.ShimName, "fivemanage.db")
+	sqldb, err := sql.Open(sqliteshim.ShimName, "file::memory:?cache=shared") // fivemanage.db
 	if err != nil {
 		panic(err)
 	}

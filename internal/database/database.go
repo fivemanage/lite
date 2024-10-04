@@ -7,6 +7,10 @@ type User struct {
 	ID            int    `bun:"id,pk,autoincrement"`
 	Name          string `bun:"name"`
 	Email         string `bun:"email"`
+	PasswordHash  string `bun:"password_hash"`
+	AuthProvider  string `bun:"auth_provider"`
+	AuthID        string `bun:"auth_id"`
+	Avatar        string `bun:"avatar"`
 }
 
 type Store interface {

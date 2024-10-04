@@ -6,6 +6,8 @@ import (
 
 	"github.com/fivemanage/lite/internal/service/authservice"
 	"github.com/labstack/echo/v4"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -21,6 +23,8 @@ func NewServer(authService *authservice.Auth) *Server {
 	srv := &Server{
 		Engine: engine,
 	}
+
+	srv.Engine.Validator = &CustomValidator{validator: validator.New()}
 
 	srv.Engine.Use(middleware.Logger())
 	srv.Engine.Use(middleware.Recover())

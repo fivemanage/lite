@@ -1,12 +1,18 @@
+import { useState } from "react";
 import "./App.css";
 import { Button } from "./components/ui/button";
 
 function App() {
-	const handleLogin = async () => {
-		console.log("Login");
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 
-		const res = await fetch("http://localhost:8080/api/auth/login", {
-			method: "GET",
+	const handleRegister = async () => {
+		const res = await fetch("/api/auth/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email, password }),
 		});
 
 		const data = await res.json();
@@ -17,7 +23,18 @@ function App() {
 		<main className="bg-background w-full h-screen dark font-medium text-3xl p-4">
 			<h1 className="text-foreground">Fivemanage Lite</h1>
 
-			<Button onClick={handleLogin}>Login</Button>
+			<input
+				value={email}
+				onChange={(e) => setEmail(e.currentTarget.value)}
+				placeholder="Email"
+			/>
+			<input
+				placeholder="Password"
+				value={password}
+				onChange={(e) => setPassword(e.currentTarget.value)}
+			/>
+
+			<Button onClick={handleRegister}>Login</Button>
 		</main>
 	);
 }
