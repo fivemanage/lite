@@ -1,6 +1,10 @@
 package database
 
-import "github.com/uptrace/bun"
+import (
+	"fmt"
+
+	"github.com/uptrace/bun"
+)
 
 type User struct {
 	bun.BaseModel `bun:"table:user"`
@@ -17,13 +21,16 @@ type Store interface {
 	Connect() *bun.DB
 }
 
-func New(option string, dsn string) Store {
-	switch option {
+// TODO: Return error if driver is not supported
+func New(driver string, dsn string) Store {
+	fmt.Println("option", driver)
+
+	switch driver {
 	case "mysql":
 		return &MySQL{}
 	case "sqlite":
 		return &SQLite{}
+	default:
+		return nil
 	}
-
-	return nil
 }
