@@ -25,6 +25,9 @@ var (
 		Short: "Open-source, easy-to-use file hosting service.",
 	}
 
+	// this whole code can probably go into a 'run.go' file.
+	// just to not fill this file with shit
+	// its gonna be ugly anyways tho
 	runCmd = &cobra.Command{
 		Use:   "run",
 		Short: "Run fivemanage application",

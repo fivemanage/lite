@@ -56,6 +56,7 @@ func (a *Auth) LoginUser() {
 }
 
 // OAuthLogin uses OAuth2 to authenticate the user
+// This will probably work as register and login, right???
 func (a *Auth) OAuthLogin() string {
 	verifier := oauth2.GenerateVerifier()
 	url := a.config.github.AuthCodeURL("state", oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier))

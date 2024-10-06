@@ -11,6 +11,10 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// This embed shit shouldn't be this far away.
+// When we are ready, we can either build the React code directly into the server or root folder
+// or just copy it in the Dockerfile.
+
 // go:embed ../../../web/dist
 var webContent embed.FS
 
@@ -18,6 +22,7 @@ type Server struct {
 	Engine *echo.Echo
 }
 
+// TODO: Add sentry for monitoring. There should be an opt-out option.
 func NewServer(authService *authservice.Auth) *Server {
 	engine := echo.New()
 	srv := &Server{
@@ -25,6 +30,8 @@ func NewServer(authService *authservice.Auth) *Server {
 	}
 
 	srv.Engine.Validator = &CustomValidator{validator: validator.New()}
+
+	// TODO: lets use 'logrus' for logging
 
 	// srv.Engine.Use(middleware.Logger())
 	srv.Engine.Use(middleware.Recover())
