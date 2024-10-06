@@ -32,16 +32,23 @@ func New(db *bun.DB) *Auth {
 	}
 }
 
+// RegisterUser will register the user, not shit, but we need to make sure this is
+// only for non-admin users. The actual admin user should have the defalt admin password
+// unless changed in ENV, and then be prompted to change it. That should probably be required.
 func (a *Auth) RegisterUser(ctx context.Context, register *api.RegisterRequest) {
 	// Check if user exists
 	exists := a.userExists(ctx, register.Email)
 	if exists {
 		fmt.Println("User already exists")
+		return
 	}
 	// Create user
+	err := a.createUser(ctx, register)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	// Send email verification
-	// Return user
+	// Return a JWT or smth
 }
 
 // Login uses email and password to authenticate the user

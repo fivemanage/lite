@@ -26,7 +26,7 @@ func NewServer(authService *authservice.Auth) *Server {
 
 	srv.Engine.Validator = &CustomValidator{validator: validator.New()}
 
-	srv.Engine.Use(middleware.Logger())
+	// srv.Engine.Use(middleware.Logger())
 	srv.Engine.Use(middleware.Recover())
 
 	srv.Engine.Use(middleware.StaticWithConfig(middleware.StaticConfig{
