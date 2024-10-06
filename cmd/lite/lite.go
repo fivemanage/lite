@@ -29,8 +29,6 @@ var (
 		Use:   "run",
 		Short: "Run fivemanage application",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(args)
-
 			port := viper.GetInt("port")
 			driver := viper.GetString("driver")
 
@@ -87,7 +85,13 @@ func init() {
 	rootCmd.AddCommand(runCmd)
 
 	rootCmd.AddCommand(migrate.RootCmd)
-	migrate.RootCmd.AddCommand(migrate.InitCmd, migrate.MigrateCmd)
+	migrate.RootCmd.AddCommand(
+		migrate.InitCmd,
+		migrate.MigrateCmd,
+		migrate.CreateMigrationCmd,
+		migrate.UnlockCmd,
+		migrate.LockCmd,
+	)
 }
 
 func main() {
